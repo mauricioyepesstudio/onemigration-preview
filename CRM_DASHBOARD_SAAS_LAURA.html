@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1Migration Growth Platform - CRM Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f1419;
+            color: #e1e8ed;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #38444d;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #00a651 0%, #0066cc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00a651 0%, #0066cc 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .user-name {
+            text-align: right;
+        }
+
+        .user-name .name {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .user-name .plan {
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* MAIN GRID */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .metric-card {
+            background: #192734;
+            border: 1px solid #38444d;
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            border-color: #00a651;
+            box-shadow: 0 0 20px rgba(0, 166, 81, 0.1);
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-value {
+            font-size: 36px;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .metric-change {
+            font-size: 14px;
+            color: #00a651;
+            font-weight: 600;
+        }
+
+        .metric-change.down {
+            color: #e74c3c;
+        }
+
+        /* SECTIONS */
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* PLATFORM ACCOUNTS */
+        .accounts-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .account-card {
+            background: #192734;
+            border: 1px solid #38444d;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .account-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .account-name {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .account-handle {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 15px;
+        }
+
+        .account-stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            border-top: 1px solid #38444d;
+            border-bottom: 1px solid #38444d;
+            margin-bottom: 15px;
+        }
+
+        .account-stat {
+            text-align: center;
+        }
+
+        .account-stat .number {
+            font-size: 20px;
+            font-weight: bold;
+            color: #00a651;
+        }
+
+        .account-stat .label {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .account-status {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-connected {
+            background: rgba(0, 166, 81, 0.1);
+            color: #00a651;
+        }
+
+        .status-pending {
+            background: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+        }
+
+        /* CONTENT CALENDAR */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            background: #192734;
+            border: 1px solid #38444d;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-day:hover {
+            border-color: #00a651;
+            background: rgba(0, 166, 81, 0.1);
+        }
+
+        .calendar-day.today {
+            border-color: #00a651;
+            background: rgba(0, 166, 81, 0.2);
+        }
+
+        .calendar-day .date {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .calendar-day .posts {
+            font-size: 11px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        /* FORM */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #e1e8ed;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            background: #192734;
+            border: 1px solid #38444d;
+            border-radius: 8px;
+            padding: 12px;
+            color: #e1e8ed;
+            font-family: inherit;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #00a651;
+        }
+
+        /* MODAL/SETUP */
+        .setup-section {
+            background: #192734;
+            border: 1px solid #38444d;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .setup-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .setup-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .setup-description {
+            color: #999;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        button {
+            background: linear-gradient(135deg, #00a651 0%, #0066cc 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 166, 81, 0.3);
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: #161b22;
+            border-right: 1px solid #38444d;
+            padding: 20px;
+            display: none;
+        }
+
+        @media (max-width: 1200px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .accounts-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .accounts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .success-message {
+            background: rgba(0, 166, 81, 0.1);
+            border: 1px solid #00a651;
+            color: #00a651;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(0, 166, 81, 0.1);
+            color: #00a651;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">1Migration Growth Platform</div>
+            <div class="user-info">
+                <div class="user-avatar">L</div>
+                <div class="user-name">
+                    <div class="name">Laura Gómez</div>
+                    <div class="plan">Pro Plan</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- DASHBOARD METRICS -->
+        <div class="section">
+            <div class="section-title">📊 Tu Crecimiento Hoy</div>
+            <div class="dashboard-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Instagram Followers</div>
+                    <div class="metric-value">1,364</div>
+                    <div class="metric-change">Target: 2,500 (+83%)</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">TikTok Followers</div>
+                    <div class="metric-value">207</div>
+                    <div class="metric-change">Target: 1,000 (+383%)</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">YouTube Subs</div>
+                    <div class="metric-value">135</div>
+                    <div class="metric-change">Target: 500 (+270%)</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Monthly Revenue</div>
+                    <div class="metric-value">$1,500</div>
+                    <div class="metric-change">Target: $5,000+ (+230%)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONNECTED ACCOUNTS -->
+        <div class="section">
+            <div class="section-title">📱 Tus Plataformas Conectadas</div>
+            <div class="accounts-grid">
+                <div class="account-card">
+                    <div class="account-icon">📷</div>
+                    <div class="account-name">Instagram</div>
+                    <div class="account-handle">@1migration</div>
+                    <div class="account-stats">
+                        <div class="account-stat">
+                            <div class="number">1.3K</div>
+                            <div class="label">Followers</div>
+                        </div>
+                        <div class="account-stat">
+                            <div class="number">8.2%</div>
+                            <div class="label">Engagement</div>
+                        </div>
+                    </div>
+                    <div class="account-status status-connected">✓ Conectada</div>
+                </div>
+
+                <div class="account-card">
+                    <div class="account-icon">🎵</div>
+                    <div class="account-name">TikTok</div>
+                    <div class="account-handle">@1migration</div>
+                    <div class="account-stats">
+                        <div class="account-stat">
+                            <div class="number">207</div>
+                            <div class="label">Followers</div>
+                        </div>
+                        <div class="account-stat">
+                            <div class="number">12.5%</div>
+                            <div class="label">Engagement</div>
+                        </div>
+                    </div>
+                    <div class="account-status status-connected">✓ Conectada</div>
+                </div>
+
+                <div class="account-card">
+                    <div class="account-icon">🎬</div>
+                    <div class="account-name">YouTube</div>
+                    <div class="account-handle">1migration</div>
+                    <div class="account-stats">
+                        <div class="account-stat">
+                            <div class="number">135</div>
+                            <div class="label">Suscriptores</div>
+                        </div>
+                        <div class="account-stat">
+                            <div class="number">4.5%</div>
+                            <div class="label">Engagement</div>
+                        </div>
+                    </div>
+                    <div class="account-status status-pending">⏳ Pendiente</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SETUP STEPS -->
+        <div class="section">
+            <div class="section-title">🚀 Próximos Pasos</div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                <div class="setup-section">
+                    <div class="setup-icon">1️⃣</div>
+                    <div class="setup-title">Conecta tus cuentas</div>
+                    <div class="setup-description">Instagram, TikTok, YouTube. Nosotros trackearemos todo automáticamente.</div>
+                    <button onclick="alert('En desarrollo: Integration con APIs de redes sociales')">Conectar</button>
+                </div>
+
+                <div class="setup-section">
+                    <div class="setup-icon">2️⃣</div>
+                    <div class="setup-title">Inicia el calendar</div>
+                    <div class="setup-description">Recibirás 58 posts diseñados. Solo publícalos según el schedule.</div>
+                    <button onclick="alert('Tu calendar está listo en GitHub. Comienza Sept 29')">Ver Calendar</button>
+                </div>
+
+                <div class="setup-section">
+                    <div class="setup-icon">3️⃣</div>
+                    <div class="setup-title">Nosotros manejamos</div>
+                    <div class="setup-description">Vemos todo aquí. Metrics, analytics, AI automation. Todo centralizado.</div>
+                    <button onclick="alert('Dashboard activo. Sincronización automática cada hora')">Dashboard</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- CALENDAR PREVIEW -->
+        <div class="section">
+            <div class="section-title">📅 Content Calendar - Septiembre/Octubre</div>
+            <div class="calendar-grid">
+                <div class="calendar-day">
+                    <div class="date">28</div>
+                    <div class="posts">Plan</div>
+                </div>
+                <div class="calendar-day today">
+                    <div class="date">29</div>
+                    <div class="posts">2 posts</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="date">30</div>
+                    <div class="posts">2 posts</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="date">1</div>
+                    <div class="posts">3 posts</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="date">2</div>
+                    <div class="posts">1 video</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="date">3</div>
+                    <div class="posts">2 posts</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="date">4</div>
+                    <div class="posts">Rest</div>
+                </div>
+            </div>
+            <p style="color: #999; margin-top: 20px; text-align: center;">20 piezas en Week 1 | 58 totales en 30 días</p>
+        </div>
+
+        <!-- AI AGENT STATUS -->
+        <div class="section">
+            <div class="section-title">🤖 AI Agent - Automatización <span class="badge">En Setup</span></div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="metric-card">
+                    <div class="metric-label">Instagram Comments</div>
+                    <div class="metric-value">Auto-Response Ready</div>
+                    <div class="metric-change">Responde 80% de comentarios</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">WhatsApp DMs</div>
+                    <div class="metric-value">Lead Qualification</div>
+                    <div class="metric-change">Clasifica leads automáticamente</div>
+                </div>
+            </div>
+            <p style="color: #999; margin-top: 20px;">El agent maneja respuestas automáticas 24/7. Tú solo ves los leads importantes.</p>
+        </div>
+
+        <!-- SETTINGS -->
+        <div class="section">
+            <div class="section-title">⚙️ Configuración de Cuenta</div>
+            <div style="background: #192734; border: 1px solid #38444d; border-radius: 12px; padding: 30px; max-width: 600px;">
+                <div class="form-group">
+                    <label>Nombre Completo</label>
+                    <input type="text" value="Laura Gómez" />
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" value="laura@1migration.com" />
+                </div>
+                <div class="form-group">
+                    <label>Teléfono (WhatsApp)</label>
+                    <input type="tel" value="+1-305-..." placeholder="Para que clientes te encuentren" />
+                </div>
+                <div class="form-group">
+                    <label>Biografía para Redes</label>
+                    <textarea rows="3" placeholder="Tu descripción que aparecerá en posts">Trámites de inmigración en EE.UU. | Asilo 🇺🇸 | +500 casos exitosos</textarea>
+                </div>
+                <button>Guardar Cambios</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                if (this.textContent.includes('Guardar')) {
+                    const msg = document.createElement('div');
+                    msg.className = 'success-message show';
+                    msg.textContent = '✓ Cambios guardados exitosamente';
+                    this.parentElement.insertBefore(msg, this);
+                    setTimeout(() => msg.remove(), 3000);
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

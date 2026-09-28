@@ -1,0 +1,26 @@
+# Machine-specific configuration
+config/workspace.local.json
+
+# Logs and reports with sensitive data
+logs/
+*.log
+
+# Runtime state and locks
+state/locks/
+state/*.lock
+state/automation-leader.json
+
+# Credentials and secrets
+.env
+.env.local
+*.key
+*.pem
+
+# IDE configuration
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp

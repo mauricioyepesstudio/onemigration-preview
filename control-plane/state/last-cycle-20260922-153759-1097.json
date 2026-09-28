@@ -1,0 +1,11 @@
+{
+    "mode":  "dry-run",
+    "runId":  "20260922-153759-1097",
+    "durationSeconds":  0.76,
+    "projectsWithIssues":  5,
+    "healthyProjects":  1,
+    "startTime":  "2026-09-22T15:37:59.4152837-04:00",
+    "projectsChecked":  6,
+    "endTime":  "2026-09-22T15:38:00.1798971-04:00",
+    "exitCode":  0
+}

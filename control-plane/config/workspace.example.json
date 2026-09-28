@@ -1,0 +1,77 @@
+{
+  "workspace": {
+    "name": "AI-Projects",
+    "root": "C:\\Users\\graphics1\\AI-Projects",
+    "machine": "office|home",
+    "automation_leader": true,
+    "scheduler_enabled": false
+  },
+  "projects": {
+    "pros360era": {
+      "id": "pros360era",
+      "name": "PROS360ERA",
+      "path": "C:\\Users\\graphics1\\pros360era",
+      "remote": "https://github.com/mauricioyepesstudio/pros360era.git",
+      "type": "nextjs",
+      "dev_command": "npm run dev",
+      "build_command": "npm run build",
+      "test_command": "npm test",
+      "lint_command": "npm run lint",
+      "deploy_target": "vercel"
+    },
+    "marketing_ai": {
+      "id": "marketing_ai",
+      "name": "Marketing-AI-Platform",
+      "path": "C:\\Users\\graphics1\\Desktop\\marketing-ai-platform",
+      "remote": "https://github.com/mauricioyepesstudio/marketing-ai-platform.git",
+      "type": "fastapi_react",
+      "backend_command": "python -m backend.main",
+      "frontend_command": "npm run dev",
+      "test_command": "pytest",
+      "lint_command": "eslint"
+    },
+    "belong": {
+      "id": "belong",
+      "name": "BELONG",
+      "path": "C:\\Users\\graphics1\\AI-Projects\\belong-v25-candidate",
+      "remote": "none",
+      "type": "nextjs",
+      "status": "candidate"
+    },
+    "portfolio": {
+      "id": "portfolio",
+      "name": "Mauricio-Portfolio",
+      "path": "C:\\Users\\graphics1\\Desktop\\mauricio-portfolio",
+      "remote": "https://github.com/mauricioyepesstudio/mauricio-portfolio.git",
+      "type": "nextjs"
+    },
+    "realgroup": {
+      "id": "realgroup",
+      "name": "RealGroup-Website",
+      "path": "C:\\Users\\graphics1\\Desktop\\realgroup-website",
+      "remote": "https://github.com/mauricioyepesstudio/mauricioyepes.git",
+      "type": "nextjs"
+    }
+  },
+  "tools": {
+    "supabase": {
+      "projects": ["pros360era", "belong"],
+      "env_var": "SUPABASE_URL"
+    },
+    "meta_ads": {
+      "projects": ["marketing_ai"],
+      "requires_oauth": true
+    },
+    "vercel": {
+      "projects": ["pros360era", "portfolio", "realgroup"],
+      "env_var": "VERCEL_TOKEN"
+    }
+  },
+  "automation": {
+    "leader": "office",
+    "scheduler_type": "task-scheduler",
+    "daily_cycle_time": "09:00",
+    "timezone": "America/New_York",
+    "max_parallel_tasks": 2
+  }
+}
