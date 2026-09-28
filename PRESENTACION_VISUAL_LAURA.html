@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1Migration - Estrategia 30 Días</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .slide {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            display: none;
+            animation: fadeIn 0.8s ease-in;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide h1 {
+            color: #667eea;
+            font-size: 48px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .slide h2 {
+            color: #667eea;
+            font-size: 36px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        /* SLIDE 1: NUMEROS GRANDES */
+        .numbers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .number-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            transition: transform 0.3s ease;
+        }
+
+        .number-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .number-card .big {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 20px 0;
+            animation: countUp 2s ease-out;
+        }
+
+        .number-card .label {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .number-card .change {
+            font-size: 24px;
+            margin-top: 10px;
+            color: #4ade80;
+            font-weight: bold;
+        }
+
+        /* SLIDE 2: DINERO */
+        .money-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin: 40px 0;
+            align-items: center;
+        }
+
+        .money-box {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .money-box.after {
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+        }
+
+        .money-box .title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .money-box .amount {
+            font-size: 56px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .money-box .details {
+            font-size: 16px;
+            line-height: 1.8;
+            text-align: left;
+            background: rgba(0,0,0,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        /* SLIDE 3: TIMELINE */
+        .timeline {
+            position: relative;
+            padding: 40px 0;
+        }
+
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+            align-items: center;
+        }
+
+        .timeline-week {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .timeline-content {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .timeline-content h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+
+        .timeline-content p {
+            color: #555;
+            line-height: 1.6;
+            margin: 5px 0;
+        }
+
+        .emoji {
+            margin-right: 10px;
+        }
+
+        /* NAVEGACION */
+        .navigation {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            font-weight: bold;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .slide-counter {
+            text-align: center;
+            color: white;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        /* SLIDE 4: GRAFICO */
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 40px 0;
+        }
+
+        .slide-footer {
+            text-align: center;
+            color: #667eea;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 2px solid #667eea;
+        }
+
+        /* SLIDE 5: CTA */
+        .cta-section {
+            text-align: center;
+            padding: 60px 40px;
+        }
+
+        .cta-section h1 {
+            font-size: 54px;
+            margin-bottom: 30px;
+            color: #667eea;
+        }
+
+        .cta-section p {
+            font-size: 24px;
+            color: #555;
+            margin: 20px 0;
+            line-height: 1.6;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .btn-yes {
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+            padding: 20px 60px;
+            font-size: 20px;
+        }
+
+        .btn-no {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 20px 60px;
+            font-size: 20px;
+        }
+
+        .checklist {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: left;
+            margin: 30px 0;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .checklist-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #ddd;
+            font-size: 18px;
+            color: #555;
+        }
+
+        .checklist-item:last-child {
+            border-bottom: none;
+        }
+
+        .checklist-item::before {
+            content: "✓ ";
+            color: #4ade80;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .icon {
+            font-size: 60px;
+            margin: 20px 0;
+        }
+
+        @keyframes countUp {
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            animation: fillProgress 1.5s ease-out;
+        }
+
+        @keyframes fillProgress {
+            from { width: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- SLIDE 1: NUMEROS PRINCIPALES -->
+        <div class="slide active">
+            <h1>🚀 1MIGRATION - TU FUTURO EN 30 DÍAS</h1>
+            <div class="numbers-grid">
+                <div class="number-card">
+                    <div class="label">INSTAGRAM</div>
+                    <div class="big" data-target="2500">1,364</div>
+                    <div class="change">+83% 📱</div>
+                </div>
+                <div class="number-card">
+                    <div class="label">TIKTOK</div>
+                    <div class="big" data-target="1000">207</div>
+                    <div class="change">+383% 🚀</div>
+                </div>
+                <div class="number-card">
+                    <div class="label">YOUTUBE</div>
+                    <div class="big" data-target="500">135</div>
+                    <div class="change">+270% 🎬</div>
+                </div>
+                <div class="number-card">
+                    <div class="label">DINERO/MES</div>
+                    <div class="big">$5K+</div>
+                    <div class="change">+230% 💰</div>
+                </div>
+            </div>
+            <div class="slide-footer">HOY: 1,364 followers | $1,500/mes → DESPUÉS: 2,500 followers | $5,000+/mes</div>
+        </div>
+
+        <!-- SLIDE 2: DINERO DETALLADO -->
+        <div class="slide">
+            <h2>💰 EL DINERO - LO QUE MÁS IMPORTA</h2>
+            <div class="money-comparison">
+                <div class="money-box">
+                    <div class="title">AHORA (Septiembre)</div>
+                    <div class="amount">$1,500</div>
+                    <div class="details">
+                        <strong>Consultaciones:</strong><br>
+                        20-30/mes × $75-100<br><br>
+                        <strong>Total:</strong><br>
+                        $1,500-3,000/mes
+                    </div>
+                </div>
+                <div class="money-box after">
+                    <div class="title">DESPUÉS (Octubre)</div>
+                    <div class="amount">$5,000+</div>
+                    <div class="details">
+                        <strong>Consultaciones:</strong> $3,750-7,500<br>
+                        <strong>Cursos online:</strong> $580-2,450<br>
+                        <strong>Sesiones grupo:</strong> $600-1,500<br>
+                        <strong>Partnerships:</strong> $500-1,000<br><br>
+                        <strong>Total:</strong><br>
+                        $5,550-9,000/mes
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 40px; padding: 30px; background: #fef3c7; border-radius: 10px; border-left: 4px solid #f59e0b;">
+                <div style="font-size: 28px; color: #d97706; font-weight: bold;">+$3,750 a $5,250 EN UN MES</div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: SEMANA POR SEMANA -->
+        <div class="slide">
+            <h2>📅 SEMANA POR SEMANA - VE EL PROGRESO</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-week">SEMANA 1<br>Sept 29</div>
+                    <div class="timeline-content">
+                        <h3>🎬 ¡Comienza!</h3>
+                        <p><span class="emoji">👥</span> <strong>+86 followers</strong></p>
+                        <p><span class="emoji">📧</span> <strong>+250 leads</strong></p>
+                        <p><span class="emoji">💰</span> <strong>+$750 revenue</strong></p>
+                        <p style="margin-top: 15px; color: #667eea; font-weight: bold;">Primeras piezas de contenido publicadas ✅</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-week">SEMANA 2<br>Oct 6-12</div>
+                    <div class="timeline-content">
+                        <h3>📈 Algo es viral</h3>
+                        <p><span class="emoji">👥</span> <strong>+150 followers (cumul)</strong></p>
+                        <p><span class="emoji">📧</span> <strong>+400 leads (cumul)</strong></p>
+                        <p><span class="emoji">💰</span> <strong>+$1,300 revenue (cumul)</strong></p>
+                        <p style="margin-top: 15px; color: #667eea; font-weight: bold;">Sistema funcionando 🚀</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-week">SEMANA 3<br>Oct 13-19</div>
+                    <div class="timeline-content">
+                        <h3>🔥 Momentum</h3>
+                        <p><span class="emoji">👥</span> <strong>+180 followers (cumul)</strong></p>
+                        <p><span class="emoji">📧</span> <strong>+800 leads (cumul)</strong></p>
+                        <p><span class="emoji">💰</span> <strong>+$2,500 revenue (cumul)</strong></p>
+                        <p style="margin-top: 15px; color: #667eea; font-weight: bold;">Momentum total ⚡</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-week">SEMANA 4<br>Oct 20-26</div>
+                    <div class="timeline-content">
+                        <h3>🎉 META ALCANZADA</h3>
+                        <p><span class="emoji">👥</span> <strong>+200 followers (cumul) = 2,500 ✅</strong></p>
+                        <p><span class="emoji">📧</span> <strong>+1,200 leads (cumul)</strong></p>
+                        <p><span class="emoji">💰</span> <strong>+$4,800 revenue (cumul)</strong></p>
+                        <p style="margin-top: 15px; color: #4ade80; font-weight: bold;">CASE STUDY LISTA PARA PITCH 🎊</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: GRAFICO -->
+        <div class="slide">
+            <h2>📊 CRECIMIENTO VISUAL</h2>
+            <div class="chart-container">
+                <canvas id="growthChart"></canvas>
+            </div>
+            <div class="slide-footer">Crecimiento exponencial en 30 días</div>
+        </div>
+
+        <!-- SLIDE 5: LO QUE RECIBES -->
+        <div class="slide">
+            <h2>📦 LO QUE RECIBES DEL SISTEMA</h2>
+            <div class="numbers-grid">
+                <div class="number-card">
+                    <div class="icon">📅</div>
+                    <div class="label">Content Calendar</div>
+                    <div style="font-size: 24px; color: white; margin: 20px 0;">58 piezas diseñadas</div>
+                </div>
+                <div class="number-card">
+                    <div class="icon">🎬</div>
+                    <div class="label">Creative Briefs</div>
+                    <div style="font-size: 24px; color: white; margin: 20px 0;">Sigue cada uno</div>
+                </div>
+                <div class="number-card">
+                    <div class="icon">📊</div>
+                    <div class="label">Dashboard</div>
+                    <div style="font-size: 24px; color: white; margin: 20px 0;">Métricas en vivo</div>
+                </div>
+                <div class="number-card">
+                    <div class="icon">🤖</div>
+                    <div class="label">AI Agent</div>
+                    <div style="font-size: 24px; color: white; margin: 20px 0;">Responde 80% auto</div>
+                </div>
+            </div>
+
+            <div class="checklist">
+                <div class="checklist-item">Content Calendar Completo (58 piezas)</div>
+                <div class="checklist-item">Creative Briefs para cada pieza</div>
+                <div class="checklist-item">Google Sheets Dashboard (métricas)</div>
+                <div class="checklist-item">AI Agent Configurado (responde auto)</div>
+                <div class="checklist-item">Daily Checklist (qué hacer cada día)</div>
+                <div class="checklist-item">Weekly Checkpoints (estás on track?)</div>
+                <div class="checklist-item">Documentación Completa (para pitch)</div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: CHECKLIST MAÑANA -->
+        <div class="slide">
+            <h2>✅ CHECKLIST PARA MAÑANA (Sept 29)</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin: 40px 0;">
+                <div style="background: #f0f9ff; padding: 30px; border-radius: 10px; border-left: 4px solid #667eea;">
+                    <div style="font-size: 24px; font-weight: bold; color: #667eea; margin-bottom: 20px;">HORA 1-2</div>
+                    <div class="checklist-item" style="border: none; padding: 0;">Google Sheets dashboard</div>
+                    <div class="checklist-item" style="border: none; padding: 0;">Screenshot Instagram Insights</div>
+                    <div class="checklist-item" style="border: none; padding: 0;">Download CapCut (FREE)</div>
+                </div>
+                <div style="background: #f0fdf4; padding: 30px; border-radius: 10px; border-left: 4px solid #4ade80;">
+                    <div style="font-size: 24px; font-weight: bold; color: #4ade80; margin-bottom: 20px;">HORA 3-4</div>
+                    <div class="checklist-item" style="border: none; padding: 0;">Grabar Reel O Carousel</div>
+                    <div class="checklist-item" style="border: none; padding: 0;">Publicar en Instagram</div>
+                    <div class="checklist-item" style="border: none; padding: 0;">Screenshot resultado</div>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 40px; padding: 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 10px; color: white;">
+                <div style="font-size: 28px; font-weight: bold;">⏱️ 4-5 HORAS TOTAL</div>
+                <div style="font-size: 18px; margin-top: 10px; opacity: 0.9;">¡Y ves tu primer resultado mañana!</div>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: FINAL CTA -->
+        <div class="slide">
+            <div class="cta-section">
+                <h1>🎯 ¿ESTÁS LISTA?</h1>
+                <p>✨ 30 días</p>
+                <p>✨ 2,500 followers</p>
+                <p>✨ $5,000+/mes</p>
+                <p>✨ Case study para tu red</p>
+                <br>
+                <p style="font-size: 28px; color: #667eea; font-weight: bold;">¿VAMOS A HACERLO?</p>
+                <div class="cta-buttons">
+                    <button class="btn-yes" onclick="alert('¡EXCELENTE! Empezamos MAÑANA (Sept 29)\n\nTodo está listo en GitHub:\nhttps://github.com/mauricioyepesstudio/onemigration-preview\n\n1. Crea Google Sheets dashboard\n2. Graba primer Reel\n3. Publica\n\n¡Vamos!')">✅ SÍ, VAMOS</button>
+                    <button class="btn-no" onclick="alert('Ok, sin presión.\n\nPero piénsalo:\n- 30 días = 1 mes\n- Resultado: +$3,750-5,250\n- Sin presupuesto adicional\n\nNo es riesgo, es oportunidad.\n\n¿Reconsideras?')">❌ NO, GRACIAS</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAVEGACION -->
+    <div class="navigation">
+        <button onclick="previousSlide()">← Anterior</button>
+        <button onclick="nextSlide()">Siguiente →</button>
+    </div>
+    <div class="slide-counter">
+        <span id="current-slide">1</span> / <span id="total-slides">7</span>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+
+            document.getElementById('current-slide').textContent = currentSlide + 1;
+
+            // Inicializar gráfico si es la slide 4
+            if (currentSlide === 3 && !window.chartInitialized) {
+                initChart();
+                window.chartInitialized = true;
+            }
+        }
+
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+
+        function previousSlide() {
+            showSlide(currentSlide - 1);
+        }
+
+        // Teclas de navegación
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        function initChart() {
+            const ctx = document.getElementById('growthChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['HOY\n(Sept 28)', 'Semana 1\n(Oct 5)', 'Semana 2\n(Oct 12)', 'Semana 3\n(Oct 19)', 'Semana 4\n(Oct 26)'],
+                    datasets: [
+                        {
+                            label: 'Instagram Followers',
+                            data: [1364, 1450, 1600, 1780, 2500],
+                            borderColor: '#667eea',
+                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 8,
+                            pointBackgroundColor: '#667eea',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2
+                        },
+                        {
+                            label: 'Monthly Revenue ($)',
+                            data: [1500, 2250, 3550, 4000, 5250],
+                            borderColor: '#4ade80',
+                            backgroundColor: 'rgba(74, 222, 128, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 8,
+                            pointBackgroundColor: '#4ade80',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: {
+                        legend: {
+                            labels: { usePointStyle: true, padding: 20, font: { size: 14 } }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: { display: true, text: 'Followers' },
+                            grid: { color: 'rgba(0,0,0,0.05)' }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: { display: true, text: 'Revenue ($)' },
+                            grid: { drawOnChartArea: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Mostrar página actual
+        document.getElementById('total-slides').textContent = totalSlides;
+    </script>
+</body>
+</html>
