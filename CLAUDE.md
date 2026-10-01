@@ -24,4 +24,4 @@ Es parte de **EVOLUSA (pros360era)**, donde se arma la experiencia de 1MIGRATION
 - `main`: sin push directo ni merge desde este flujo.
 
 ## Coordinación
-El cerebro central (AI-Projects-Control-Plane) lee `ESTADO.md` de este repo para el seguimiento semanal. Mantener `ESTADO.md` al día.
+Lo resume el cerebro central (AI-Projects-Control-Plane) cada lunes; mantener ESTADO.md al día.
