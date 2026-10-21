@@ -32,6 +32,7 @@
       <a href="#como">Cómo funciona</a>
       <a href="#laura">Sobre Laura</a>
       <a href="#recursos">Recursos</a>
+      <a href="#evolusa">EVOLUSA</a>
       <a href="#faq">Preguntas</a>
     </nav>
     <a class="btn btn--sm btn--red" href="#evaluacion" data-track="nav_cta">Evalúa tu caso</a>
@@ -150,11 +151,11 @@
         <label>Estado donde vives<input name="estado" autocomplete="address-level1" placeholder="Florida"></label>
         <label class="consent"><input type="checkbox" name="consent" required> Acepto que Onemigration me contacte por WhatsApp, llamada o SMS sobre mi caso.</label>
         <p class="err" id="quizErr" role="alert"></p>
-        <button class="btn btn--red btn--lg btn--block" type="submit">Recibir mi orientación gratis</button>
+        <button class="btn btn--red btn--lg btn--block" type="submit">Preparar mi mensaje</button>
       </fieldset>
       <div class="qstep qdone" data-step="5">
-        <h3>¡Listo, <span id="doneName"></span>! 🎉</h3>
-        <p>Recibimos tu evaluación. Para atenderte más rápido, envíanos el mensaje ya preparado por WhatsApp:</p>
+        <h3>Tu mensaje, <span id="doneName"></span></h3>
+        <p id="deliveryStatus" role="status" aria-live="polite">Tu mensaje está preparado. Para enviarlo, abre WhatsApp y confirma allí.</p>
         <a class="btn btn--red btn--lg btn--block" id="doneWa" href="#" target="_blank" rel="noopener" data-track="quiz_whatsapp">Enviar por WhatsApp →</a>
         <a class="link" href="https://square.link/u/eTggoywU" target="_blank" rel="noopener" data-track="quiz_consulta">¿Prefieres agendar una consulta personalizada ya? Resérvala aquí</a>
       </div>
@@ -180,9 +181,34 @@
       <div class="about__ctas">
         <a class="btn btn--navy" href="#evaluacion" data-track="about_quiz">Quiero trabajar con Laura</a>
         <a class="link" href="https://maps.app.goo.gl/KGeH2r4eGtaxmy886" target="_blank" rel="noopener" data-track="google_reviews">Ver reseñas 5.0 en Google →</a>
-        <a class="link" href="https://evolusa.vercel.app/" target="_blank" rel="noopener" data-track="evolusa">¿Tu próximo paso después del trámite? Conoce EVOLUSA →</a>
+        <a class="link" href="https://evolusa.vercel.app/?ref=1migration" target="_blank" rel="noopener" data-track="evolusa">¿Tu próximo paso después del trámite? Conoce EVOLUSA →</a>
       </div>
     </div>
+  </div>
+</section>
+
+
+<!-- Independent member and professional routes; no contact data is transferred. -->
+<section class="section section--cream" id="evolusa" aria-labelledby="evolusa-title">
+  <div class="wrap">
+    <p class="eyebrow">1MIGRATION + EVOLUSA</p>
+    <h2 id="evolusa-title">Tu próximo paso también puede ser profesional.</h2>
+    <p class="sub">Conoce EVOLUSA: una plataforma para organizar tus próximos pasos y explorar herramientas para desarrollar tu actividad profesional.</p>
+    <div class="grid partner-paths">
+      <article class="offer">
+        <span class="tag">Para personas</span>
+        <h3>Encuentra tu próximo paso</h3>
+        <p>Explora recursos y profesionales desde EVOLUSA. Cada servicio tiene su propio alcance, condiciones y disponibilidad.</p>
+        <a class="btn btn--navy" href="https://evolusa.vercel.app/?ref=1migration" target="_blank" rel="noopener noreferrer" data-track="evolusa_member">Explorar EVOLUSA →</a>
+      </article>
+      <article class="offer offer--feature">
+        <span class="tag tag--gold">Para profesionales</span>
+        <h3>Haz crecer tu presencia con herramientas</h3>
+        <p>Conoce la propuesta de marketing automatizado, CRM y seguimiento de contactos, creatividad y planificación de contenido. Consulta el alcance disponible antes de contratar.</p>
+        <a class="btn btn--navy" href="https://evolusa.vercel.app/aplicar-profesional?ref=1migration" target="_blank" rel="noopener noreferrer" data-track="evolusa_professional">Solicitar información profesional →</a>
+      </article>
+    </div>
+    <p class="partner-note">Abrirás otra web. El enlace identifica a 1MIGRATION como origen; no transfiere tus respuestas ni datos de contacto. Los servicios de Laura se contratan por separado. El acceso a herramientas no garantiza clientes, ingresos, aprobación profesional ni posicionamiento.</p>
   </div>
 </section>
 
@@ -223,10 +249,7 @@
         <span class="tag">Gratis</span>
         <h3>Guía de procesos migratorios</h3>
         <p>Residencia, asilo, VAWA, Visa U, naturalización y perdones explicados paso a paso.</p>
-        <form class="mini js-magnet" data-source="guia_gratis" data-redirect="https://beacons.ai/onemigration/materialgratuito">
-          <input type="email" name="email" placeholder="Tu email" required aria-label="Email">
-          <button class="btn btn--red" type="submit">Recibir guía</button>
-        </form>
+        <a class="btn btn--red" href="https://beacons.ai/onemigration/materialgratuito" target="_blank" rel="noopener noreferrer">Abrir recursos gratuitos</a>
       </article>
       <article class="offer offer--feature">
         <span class="tag tag--gold">Curso</span>
@@ -251,11 +274,7 @@
       <p class="eyebrow eyebrow--light">Comunidad</p>
       <h2>Alertas migratorias antes que nadie.</h2>
       <p class="sub sub--light">Cambios de USCIS, fechas de boletín de visas y tips prácticos cada semana. Únete a la comunidad.</p>
-      <form class="mini mini--dark js-magnet" data-source="alertas">
-        <input type="email" name="email" placeholder="Tu email" required aria-label="Email">
-        <button class="btn btn--red" type="submit">Suscribirme</button>
-      </form>
-      <p class="ok" hidden>¡Listo! Te avisaremos de cada cambio importante.</p>
+      <a class="btn btn--light js-wa" href="#" data-msg="Hola Laura, quiero información sobre su comunidad y recursos." data-track="community_contact">Preguntar por la comunidad</a>
     </div>
     <div class="socials">
       <a href="https://instagram.com/onemigration" target="_blank" rel="noopener" data-track="follow_ig"><b>Instagram</b><span>@onemigration · tips diarios</span></a>
@@ -308,6 +327,7 @@
   <a class="btn btn--navy js-wa" href="#" data-msg="Hola Laura, quiero información sobre mi caso." data-track="mbar_whatsapp">WhatsApp</a>
 </div>
 
+<script src="lead-delivery.js" defer></script>
 <script src="app.js" defer></script>
 </body>
 </html>
