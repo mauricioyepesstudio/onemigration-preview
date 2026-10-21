@@ -217,3 +217,10 @@ p { margin: 0 0 1em; }
   html { scroll-behavior: auto; }
   * { transition: none !important; animation: none !important; }
 }
+
+/* Partner routes */
+.partner-paths { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.partner-note { max-width: 76ch; margin-top: 24px; color: var(--muted); font-size: .9rem; }
+.btn:focus-visible, .svc:focus-visible, .opts button:focus-visible { outline: 3px solid var(--gold); outline-offset: 4px; }
+button:disabled { opacity: .65; cursor: wait; }
+@media (max-width: 700px) { .partner-paths { grid-template-columns: 1fr; } }

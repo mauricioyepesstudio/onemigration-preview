@@ -1,6 +1,6 @@
 /* Onemigration — lead capture, tracking and page behaviour.
- * Edit CONFIG to connect a CRM/webhook and ad pixels. Everything works without them:
- * leads always fall back to a pre-filled WhatsApp message. */
+ * CRM delivery requires an explicit accepted:true receipt.
+ * Without a configured receiver the visitor must send their WhatsApp message. */
 const CONFIG = {
   whatsapp: "17869562271",
   // POST endpoint that receives JSON leads (Make/Zapier webhook, Formspree, Google Apps Script, GoHighLevel...).
@@ -48,24 +48,11 @@ function track(event, params = {}) {
   }
 }
 
-/* ---------- attribution (utm_* from IG/TikTok/ads links) ---------- */
-const attribution = (() => {
-  const keys = ["utm_source", "utm_medium", "utm_campaign", "utm_content"];
-  const q = new URLSearchParams(location.search);
-  let saved = {};
-  try { saved = JSON.parse(sessionStorage.getItem("om_attr") || "{}"); } catch (_) {}
-  keys.forEach((k) => { if (q.get(k)) saved[k] = q.get(k); });
-  if (!saved.referrer && document.referrer) saved.referrer = document.referrer;
-  try { sessionStorage.setItem("om_attr", JSON.stringify(saved)); } catch (_) {}
-  return saved;
-})();
-
 async function sendLead(payload) {
-  const lead = { ...payload, ...attribution, page: location.href, ts: new Date().toISOString() };
-  if (!CONFIG.leadEndpoint) return;
-  try {
-    await fetch(CONFIG.leadEndpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(lead), keepalive: true });
-  } catch (_) { /* WhatsApp fallback still delivers the lead */ }
+  // Do not send immigration answers, page query strings or referrers to a CRM.
+  const lead = { nombre: payload.nombre, telefono: payload.telefono,
+    email: payload.email, source: "website-contact", ts: new Date().toISOString() };
+  return OnemigrationDelivery.sendLead(CONFIG.leadEndpoint, lead);
 }
 
 const waLink = (msg) => `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`;
@@ -93,7 +80,7 @@ function go(n) {
   steps.forEach((s) => s.classList.toggle("is-active", +s.dataset.step === n));
   bar.style.width = Math.min(n, 4) * 25 + "%";
   back.hidden = n === 1 || n === 5;
-  if (n === 2) track("quiz_start", { servicio: answers.servicio });
+  if (n === 2) track("quiz_start");
 }
 
 quiz.querySelectorAll(".opts").forEach((group) => {
@@ -103,7 +90,7 @@ quiz.querySelectorAll(".opts").forEach((group) => {
     group.querySelectorAll("button").forEach((b) => b.classList.remove("is-picked"));
     btn.classList.add("is-picked");
     answers[group.dataset.name] = btn.textContent.trim();
-    setTimeout(() => go(current + 1), 180);
+    setTimeout(() => go(+group.closest(".qstep").dataset.step + 1), 180);
   });
 });
 back.addEventListener("click", () => go(Math.max(1, current - 1)));
@@ -113,7 +100,7 @@ document.querySelectorAll(".svc").forEach((card) => card.addEventListener("click
   const svc = card.dataset.svc;
   const btn = [...quiz.querySelectorAll('[data-name="servicio"] button')].find((b) => b.textContent.trim() === svc);
   if (btn) btn.click();
-  track("service_click", { servicio: svc });
+  track("service_click");
   document.getElementById("evaluacion").scrollIntoView();
 }));
 
@@ -129,33 +116,27 @@ quiz.addEventListener("submit", async (e) => {
   const nombre = (f.get("nombre") || "").trim();
   const telefono = (f.get("telefono") || "").replace(/[^\d+]/g, "");
   const err = document.getElementById("quizErr");
+  if (quiz.querySelector('[type="submit"]').disabled) return;
   if (nombre.length < 2) return (err.textContent = "Escribe tu nombre.");
   if (telefono.replace(/\D/g, "").length < 10) return (err.textContent = "Escribe un número de WhatsApp válido (10 dígitos).");
   if (!f.get("consent")) return (err.textContent = "Necesitamos tu autorización para contactarte.");
   err.textContent = "";
 
   const lead = { ...answers, nombre, telefono, email: f.get("email") || "", estado: f.get("estado") || "", prioridad: priority(answers), source: "quiz" };
-  await sendLead(lead);
-  track("generate_lead", { kind: "lead", servicio: lead.servicio, prioridad: lead.prioridad });
+  const submit = quiz.querySelector('[type="submit"]');
+  submit.disabled = true;
+  submit.textContent = "Preparando mensaje…";
+  const result = await sendLead(lead);
+  document.getElementById("deliveryStatus").textContent = OnemigrationDelivery.receiptMessage(result);
+  if (result.delivered) track("contact_received", { kind: "lead" });
+  submit.disabled = false;
+  submit.textContent = "Preparar mi mensaje";
 
   const msg = `Hola Laura, soy ${nombre}. Acabo de hacer la evaluación en su web.\n• Trámite: ${lead.servicio || "-"}\n• Etapa: ${lead.etapa || "-"}\n• Urgencia: ${lead.urgencia || "-"}\n• Estado: ${lead.estado || "-"}\n¿Me puede orientar?`;
   document.getElementById("doneName").textContent = nombre.split(" ")[0];
   document.getElementById("doneWa").href = waLink(msg);
   go(5);
 });
-
-/* ---------- lead magnets / newsletter ---------- */
-document.querySelectorAll(".js-magnet").forEach((form) => form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const email = form.email.value.trim();
-  if (!/^\S+@\S+\.\S+$/.test(email)) return form.email.focus();
-  await sendLead({ email, source: form.dataset.source });
-  track("subscribe", { kind: "subscribe", source: form.dataset.source });
-  if (form.dataset.redirect) return (location.href = form.dataset.redirect);
-  form.hidden = true;
-  const ok = form.parentElement.querySelector(".ok");
-  if (ok) ok.hidden = false;
-}));
 
 /* ---------- testimonials ---------- */
 if (TESTIMONIALS.length) {
