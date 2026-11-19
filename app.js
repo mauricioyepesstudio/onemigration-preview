@@ -17,11 +17,11 @@ const TESTIMONIALS = [
 
 const FAQ = [
   ["¿Ustedes son abogados?", "No. Onemigration no es un bufete de abogados. Te ayudamos a preparar y organizar formularios y documentos según tus instrucciones y te acompañamos durante el proceso. Si tu caso requiere asesoría legal o representación, te recomendamos un abogado de inmigración licenciado."],
-  ["¿La evaluación tiene costo?", "No. La evaluación inicial es gratuita y sin compromiso. Si decides avanzar, te explicamos por escrito el costo del servicio y las tarifas de USCIS antes de empezar."],
-  ["¿Atienden fuera de Florida?", "Sí. Trabajamos de forma remota con personas en todo Estados Unidos por WhatsApp, llamada o videollamada."],
-  ["¿Qué necesito para empezar?", "Solo tu nombre y un WhatsApp. En la consulta te enviamos una lista personalizada de documentos según tu trámite."],
-  ["¿Cuánto tarda mi trámite?", "Depende del tipo de caso y de los tiempos de procesamiento de USCIS, que cambian con frecuencia. En la consulta revisamos los tiempos vigentes para tu caso y oficina."],
-  ["¿Mi información es confidencial?", "Sí. Tu información solo se usa para atender tu caso y nunca se comparte con terceros sin tu autorización."],
+  ["¿Cuánto cuesta la preparación de documentos?", "Escribe a Laura para confirmar el precio y el alcance antes de contratar."],
+  ["¿Hay atención remota?", "Escribe a Laura para confirmar la disponibilidad para tu ubicación."],
+  ["¿Qué necesito para empezar?", "Indica el servicio administrativo que buscas. Puedes escribir por WhatsApp sin adjuntar documentos en el primer mensaje."],
+  ["¿Cuándo puedo recibir los documentos preparados?", "Pregunta a Laura por los tiempos del servicio de preparación documental."],
+  ["¿Cómo se envía mi mensaje?", "El sitio prepara un mensaje que puedes revisar en WhatsApp. Tú confirmas el envío allí."],
 ];
 
 /* ---------- tracking ---------- */
@@ -55,7 +55,7 @@ async function sendLead(payload) {
   return OnemigrationDelivery.sendLead(CONFIG.leadEndpoint, lead);
 }
 
-const waLink = (msg) => `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`;
+const waLink = (msg) => `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg + "\nOrigen: web de OneMigration")}`;
 
 /* ---------- WhatsApp buttons ---------- */
 document.querySelectorAll(".js-wa").forEach((a) => {
@@ -132,7 +132,7 @@ quiz.addEventListener("submit", async (e) => {
   submit.disabled = false;
   submit.textContent = "Preparar mi mensaje";
 
-  const msg = `Hola Laura, soy ${nombre}. Acabo de hacer la evaluación en su web.\n• Trámite: ${lead.servicio || "-"}\n• Etapa: ${lead.etapa || "-"}\n• Urgencia: ${lead.urgencia || "-"}\n• Estado: ${lead.estado || "-"}\n¿Me puede orientar?`;
+  const msg = `Hola Laura, soy ${nombre}. Quiero información sobre el servicio de preparación de documentos. ¿Me puede indicar el alcance y el precio?`;
   document.getElementById("doneName").textContent = nombre.split(" ")[0];
   document.getElementById("doneWa").href = waLink(msg);
   go(5);
